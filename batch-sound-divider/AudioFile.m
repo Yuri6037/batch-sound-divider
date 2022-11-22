@@ -30,6 +30,7 @@
 
 @interface AudioFile()
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
+- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error;
 - (BOOL)getAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
 - (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error;
 @end
@@ -37,6 +38,7 @@
 @implementation AudioFile {
     ExtAudioFileRef _file;
     AudioStreamBasicDescription _description;
+    AudioStreamBasicDescription _decodeDescription;
 }
 
 - (instancetype _Nullable)init:(NSString *)path withError:(NSError **)error {
@@ -51,12 +53,33 @@
         ExtAudioFileDispose(_file);
         return nil;
     }
+    _decodeDescription = _description;
+    _decodeDescription.mFormatID = kAudioFormatLinearPCM;
+    _decodeDescription.mFormatFlags = kAudioFormatFlagIsBigEndian | kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+    _decodeDescription.mBytesPerFrame = (UInt32)[self getBytesPerFrame];
+    _decodeDescription.mBytesPerPacket = _decodeDescription.mBytesPerFrame;
+    _decodeDescription.mFramesPerPacket = 1;
+    _decodeDescription.mBitsPerChannel = 32;
+    if (![self setProperty:kExtAudioFileProperty_ClientDataFormat
+                  withSize:sizeof(AudioStreamBasicDescription) from:&_decodeDescription withError:error]) {
+        ExtAudioFileDispose(_file);
+        return nil;
+    }
     return self;
 }
 
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error {
     UInt32 ioSize = size;
     OSStatus status = ExtAudioFileGetProperty(_file, property, &ioSize, buffer);
+    if (status != noErr) {
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error {
+    OSStatus status = ExtAudioFileSetProperty(_file, property, size, buffer);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return NO;
@@ -90,12 +113,10 @@
 }
 
 - (instancetype _Nullable)init:(NSString *)path from:(AudioFile *)file withError:(NSError **)error {
-    AudioChannelLayout channelLayout;
-    if (![file getProperty:kExtAudioFileProperty_FileChannelLayout
-                  withSize:sizeof(AudioChannelLayout) into:&channelLayout withError:error])
-        return nil;
     NSURL *url = [NSURL fileURLWithPath:path];
-    OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileAIFFType, &file->_description, &channelLayout, kAudioFileFlags_EraseFile, &_file);
+    OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileAIFFType,
+                                                &file->_decodeDescription, NULL,
+                                                kAudioFileFlags_EraseFile, &_file);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return nil;
