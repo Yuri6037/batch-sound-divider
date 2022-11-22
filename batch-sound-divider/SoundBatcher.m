@@ -45,7 +45,7 @@
     if (framesRead <= 0)
         return NO;
     NSString *fileName = [[[metadata.title stringByAppendingString:@" - "]
-                           stringByAppendingString:metadata.composer] stringByAppendingString:@".m4a"];
+                           stringByAppendingString:metadata.composer] stringByAppendingString:@".aiff"];
     AudioFile *outFile = [[AudioFile alloc] init:fileName from:_inFile withError:error];
     if (outFile == nil)
         return NO;
