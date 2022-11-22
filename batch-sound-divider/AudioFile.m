@@ -40,7 +40,7 @@
 }
 
 - (instancetype _Nullable)init:(NSString *)path withError:(NSError **)error {
-    NSURL *url = [[NSURL alloc] initWithString:path];
+    NSURL *url = [NSURL fileURLWithPath:path];
     OSStatus status = ExtAudioFileOpenURL((__bridge CFURLRef)url, &_file);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -56,7 +56,7 @@
 
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error {
     UInt32 ioSize = size;
-    OSStatus status = ExtAudioFileGetProperty(_file, property, &ioSize, &buffer);
+    OSStatus status = ExtAudioFileGetProperty(_file, property, &ioSize, buffer);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return NO;
@@ -94,7 +94,7 @@
     if (![file getProperty:kExtAudioFileProperty_FileChannelLayout
                   withSize:sizeof(AudioChannelLayout) into:&channelLayout withError:error])
         return nil;
-    NSURL *url = [[NSURL alloc] initWithString:path];
+    NSURL *url = [NSURL fileURLWithPath:path];
     OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileAIFFType, &file->_description, &channelLayout, kAudioFileFlags_EraseFile, &_file);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -112,7 +112,7 @@
 }
 
 - (NSUInteger)getBytesPerFrame {
-    return _description.mBytesPerFrame;
+    return _description.mChannelsPerFrame * sizeof(SInt32);
 }
 
 - (NSInteger)readFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error {
