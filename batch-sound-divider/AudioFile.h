@@ -26,6 +26,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface AudioFileMetadata : NSObject
+
+@property (readwrite, assign) NSString *title;
+@property (readwrite, assign) NSString *author;
+@property (readwrite, assign) NSString *composer;
+@property (readwrite, assign) NSString *album;
+
+@end
+
 @interface AudioFile : NSObject
 
 - (instancetype _Nullable)init:(NSString *)path withError:(NSError **)error;
@@ -41,6 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)readFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error;
 
 - (BOOL)writeFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error;
+
+- (BOOL)setMetadata:(AudioFileMetadata *)metadata withError:(NSError **)error;
+
+//TODO: Implement closing
 
 @end
 

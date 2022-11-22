@@ -24,10 +24,10 @@
 #import <AudioToolbox/ExtendedAudioFile.h>
 #import "AudioFile.h"
 
-#define ERROR_DOMAIN @"com.github.Yuri6037.batch-sound-divider.AudioFile"
-
 @interface AudioFile()
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
+- (BOOL)getAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
+- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error;
 @end
 
 @implementation AudioFile {
@@ -39,7 +39,7 @@
     NSURL *url = [[NSURL alloc] initWithString:path];
     OSStatus status = ExtAudioFileOpenURL((__bridge CFURLRef)url, &_file);
     if (status != noErr) {
-        *error = [NSError errorWithDomain:ERROR_DOMAIN code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return nil;
     }
     if (![self getProperty:kExtAudioFileProperty_FileDataFormat
@@ -54,7 +54,32 @@
     UInt32 ioSize = size;
     OSStatus status = ExtAudioFileGetProperty(_file, property, &ioSize, &buffer);
     if (status != noErr) {
-        *error = [NSError errorWithDomain:ERROR_DOMAIN code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)getAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error {
+    AudioFileID afile;
+    if (![self getProperty:kExtAudioFileProperty_AudioFile withSize:sizeof(AudioFileID) into:&afile withError:error])
+        return NO;
+    UInt32 ioSize = size;
+    OSStatus status = AudioFileGetProperty(afile, property, &ioSize, buffer);
+    if (status != noErr) {
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error {
+    AudioFileID afile;
+    if (![self getProperty:kExtAudioFileProperty_AudioFile withSize:sizeof(AudioFileID) into:&afile withError:error])
+        return NO;
+    OSStatus status = AudioFileSetProperty(afile, property, size, buffer);
+    if (status != noErr) {
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return NO;
     }
     return YES;
@@ -68,7 +93,7 @@
     NSURL *url = [[NSURL alloc] initWithString:path];
     OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileAIFFType, &file->_description, &channelLayout, kAudioFileFlags_EraseFile, &_file);
     if (status != noErr) {
-        *error = [NSError errorWithDomain:ERROR_DOMAIN code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return nil;
     }
     return self;
@@ -90,7 +115,7 @@
     UInt32 ioFrameCount = (UInt32)frameCount;
     OSStatus status = ExtAudioFileRead(_file, &ioFrameCount, buffer.buffers);
     if (status != noErr) {
-        *error = [NSError errorWithDomain:ERROR_DOMAIN code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         return -1;
     }
     return ioFrameCount;
@@ -99,7 +124,24 @@
 - (BOOL)writeFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error {
     OSStatus status = ExtAudioFileWrite(_file, (UInt32)frameCount, buffer.buffers);
     if (status != noErr) {
-        *error = [NSError errorWithDomain:ERROR_DOMAIN code:status userInfo:nil];
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)setMetadata:(AudioFileMetadata *)metadata withError:(NSError **)error {
+    CFDictionaryRef infoDic;
+    if (![self getAFProperty:kAudioFilePropertyInfoDictionary withSize:sizeof(CFDictionaryRef) into:&infoDic withError:error])
+        return NO;
+    NSDictionary *dic = (__bridge NSDictionary *)infoDic;
+    [dic setValue:metadata.title forKey:@kAFInfoDictionary_Title];
+    [dic setValue:metadata.author forKey:@kAFInfoDictionary_Artist];
+    [dic setValue:metadata.composer forKey:@kAFInfoDictionary_Composer];
+    [dic setValue:metadata.album forKey:@kAFInfoDictionary_Album];
+    infoDic = (__bridge CFDictionaryRef)dic;
+    if (![self setAFProperty:kAudioFilePropertyInfoDictionary withSize:sizeof(CFDictionaryRef) from:&infoDic withError:error]) {
+        CFRelease(infoDic);
         return NO;
     }
     return YES;
