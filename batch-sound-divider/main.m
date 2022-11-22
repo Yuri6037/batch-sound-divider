@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         NSError *error;
         if (!testDivide(&error)) {
-            NSLog(@"An error has occured %ld", error.code);
+            NSLog(@"An error has occured %@", [error description]);
         }
         // insert code here...
         NSLog(@"Hello, World!");

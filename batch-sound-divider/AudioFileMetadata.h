@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readwrite, assign) NSString *composer;
 @property (readwrite, assign) NSString *album;
 
+- (NSData *)build;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -26,9 +26,9 @@
 
 @interface AudioFile()
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
-- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error;
+- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(const void *)buffer withError:(NSError **)error;
 - (BOOL)getAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
-- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error;
+- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(const void *)buffer withError:(NSError **)error;
 @end
 
 @implementation AudioFile {
@@ -74,7 +74,7 @@
     return YES;
 }
 
-- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error {
+- (BOOL)setProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size from:(const void *)buffer withError:(NSError **)error {
     OSStatus status = ExtAudioFileSetProperty(_file, property, size, buffer);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -96,7 +96,7 @@
     return YES;
 }
 
-- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(void *)buffer withError:(NSError **)error {
+- (BOOL)setAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size from:(const void *)buffer withError:(NSError **)error {
     AudioFileID afile;
     if (![self getProperty:kExtAudioFileProperty_AudioFile withSize:sizeof(AudioFileID) into:&afile withError:error])
         return NO;
@@ -110,7 +110,7 @@
 
 - (instancetype _Nullable)init:(NSString *)path from:(AudioFile *)file withError:(NSError **)error {
     NSURL *url = [NSURL fileURLWithPath:path];
-    OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileAIFFType,
+    OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileM4AType,
                                                 &file->_decodeDescription, NULL,
                                                 kAudioFileFlags_EraseFile, &_file);
     if (status != noErr) {
@@ -165,7 +165,6 @@
         CFRelease(infoDic);
         return NO;
     }
-    //TODO: if this fails, use https://id3.org/id3v2.4.0-frames and manually craft the ID3 tag.
     return YES;
 }
 
