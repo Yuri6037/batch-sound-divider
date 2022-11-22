@@ -11,6 +11,7 @@
 		DA60F685292AC13D0017D656 /* AudioFile.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F684292AC13D0017D656 /* AudioFile.m */; };
 		DA60F688292AC7610017D656 /* FrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F687292AC7610017D656 /* FrameBuffer.m */; };
 		DA60F68B292C0E1D0017D656 /* SoundBatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F68A292C0E1D0017D656 /* SoundBatcher.m */; };
+		DA60F68E292D60330017D656 /* AudioFileMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F68D292D60330017D656 /* AudioFileMetadata.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,8 @@
 		DA60F687292AC7610017D656 /* FrameBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FrameBuffer.m; sourceTree = "<group>"; };
 		DA60F689292C0E1D0017D656 /* SoundBatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundBatcher.h; sourceTree = "<group>"; };
 		DA60F68A292C0E1D0017D656 /* SoundBatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundBatcher.m; sourceTree = "<group>"; };
+		DA60F68C292D60330017D656 /* AudioFileMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileMetadata.h; sourceTree = "<group>"; };
+		DA60F68D292D60330017D656 /* AudioFileMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileMetadata.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +73,8 @@
 				DA60F689292C0E1D0017D656 /* SoundBatcher.h */,
 				DA60F68A292C0E1D0017D656 /* SoundBatcher.m */,
 				DA60F683292AC13D0017D656 /* AudioFile.h */,
+				DA60F68C292D60330017D656 /* AudioFileMetadata.h */,
+				DA60F68D292D60330017D656 /* AudioFileMetadata.m */,
 				DA60F686292AC7610017D656 /* FrameBuffer.h */,
 				DA60F687292AC7610017D656 /* FrameBuffer.m */,
 				DA60F684292AC13D0017D656 /* AudioFile.m */,
@@ -138,6 +143,7 @@
 				DA60F688292AC7610017D656 /* FrameBuffer.m in Sources */,
 				DA60F67D292ABA890017D656 /* main.m in Sources */,
 				DA60F68B292C0E1D0017D656 /* SoundBatcher.m in Sources */,
+				DA60F68E292D60330017D656 /* AudioFileMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

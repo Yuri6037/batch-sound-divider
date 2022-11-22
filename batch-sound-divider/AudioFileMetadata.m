@@ -21,32 +21,8 @@
 // DEALINGS
 // IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "FrameBuffer.h"
 #import "AudioFileMetadata.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface AudioFile : NSObject
-
-- (instancetype _Nullable)init:(NSString *)path withError:(NSError **)error;
-
-- (instancetype _Nullable)init:(NSString *)path from:(AudioFile *)file withError:(NSError **)error;
-
-- (NSUInteger)getFrameCountFromTime:(NSUInteger)seconds;
-
-- (NSUInteger)getChannelCount;
-
-- (NSUInteger)getBytesPerFrame;
-
-- (NSInteger)readFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error;
-
-- (BOOL)writeFrames:(NSUInteger)frameCount into:(FrameBuffer *)buffer withError:(NSError **)error;
-
-- (BOOL)setMetadata:(AudioFileMetadata *)metadata withError:(NSError **)error;
-
-- (BOOL)close:(NSError **)error;
+@implementation AudioFileMetadata
 
 @end
-
-NS_ASSUME_NONNULL_END
