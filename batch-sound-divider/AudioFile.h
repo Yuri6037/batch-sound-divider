@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)setMetadata:(AudioFileMetadata *)metadata withError:(NSError **)error;
 
-//TODO: Implement closing
+- (BOOL)close:(NSError **)error;
 
 @end
 

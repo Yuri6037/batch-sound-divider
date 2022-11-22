@@ -144,6 +144,16 @@
         CFRelease(infoDic);
         return NO;
     }
+    //TODO: if this fails, use https://id3.org/id3v2.4.0-frames and manually craft the ID3 tag.
+    return YES;
+}
+
+- (BOOL)close:(NSError **)error {
+    OSStatus status = ExtAudioFileDispose(_file);
+    if (status != noErr) {
+        *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return NO;
+    }
     return YES;
 }
 
