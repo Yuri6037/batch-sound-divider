@@ -24,6 +24,10 @@
 #import <AudioToolbox/ExtendedAudioFile.h>
 #import "AudioFile.h"
 
+@implementation AudioFileMetadata
+
+@end
+
 @interface AudioFile()
 - (BOOL)getProperty:(ExtAudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
 - (BOOL)getAFProperty:(AudioFilePropertyID)property withSize:(UInt32)size into:(void *)buffer withError:(NSError **)error;
