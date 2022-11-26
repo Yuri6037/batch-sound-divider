@@ -110,11 +110,26 @@
 
 - (instancetype _Nullable)init:(NSString *)path from:(AudioFile *)file withError:(NSError **)error {
     NSURL *url = [NSURL fileURLWithPath:path];
+    AudioStreamBasicDescription desc;
+    desc.mSampleRate = 44100;
+    desc.mFormatID = kAudioFormatMPEG4AAC;
+    desc.mFormatFlags = 0;
+    desc.mBytesPerPacket = 2; // must have a value or won't write apparently
+    desc.mFramesPerPacket = 0;
+    desc.mBytesPerFrame = 0;
+    desc.mChannelsPerFrame = 1;
+    desc.mBitsPerChannel = 0;
+    desc.mReserved = 0;
     OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileM4AType,
-                                                &file->_decodeDescription, NULL,
+                                                &desc, NULL,
                                                 kAudioFileFlags_EraseFile, &_file);
     if (status != noErr) {
         *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        return nil;
+    }
+    if (![self setProperty:kExtAudioFileProperty_ClientDataFormat
+                  withSize:sizeof(AudioStreamBasicDescription) from:&file->_decodeDescription withError:error]) {
+        ExtAudioFileDispose(_file);
         return nil;
     }
     return self;
