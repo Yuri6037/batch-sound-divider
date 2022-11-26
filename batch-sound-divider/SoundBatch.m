@@ -35,6 +35,7 @@
 @implementation SoundBatch {
     NSString *_sourceAudio;
     NSString *_sourceMap;
+    NSString *_album;
     CSVParser *_parser;
     BufferedTextFile *_file;
     SoundBatcher *_batcher;
@@ -50,24 +51,37 @@
     return NO;
 }
 
-- (instancetype)init:(NSString *)sourceAudio withSourceMap:(NSString *)sourceMap {
+- (instancetype)init:(NSString *)sourceAudio withSourceMap:(NSString *)sourceMap withAlbum:(NSString *)album {
     _sourceAudio = sourceAudio;
     _sourceMap = sourceMap;
     _parser = [[CSVParser alloc] init:','];
+    _album = album;
     return self;
 }
 
 - (BOOL)processLine:(NSString *)line withError:(NSError **)error {
     CSVRow row = [_parser parseRow:line];
-    
-    return YES;
+    if (row.count < 4) {
+        *error = [NSError errorWithDomain:@"SoundBatch" code:4 userInfo:nil];
+        return NO;
+    }
+    AudioFileMetadata *metadata = [[AudioFileMetadata alloc] init];
+    metadata.title = [row objectAtIndex:0];
+    metadata.author = [row objectAtIndex:1];
+    metadata.composer = [row objectAtIndex:2];
+    metadata.album = _album;
+    NSString *duration = [row objectAtIndex:3];
+    if ([metadata.title isEqualToString:@"Title"] || metadata.title.length == 0)
+        return YES; //The line is header or empty, skip it
+    NSInteger durationSecs = [duration integerValue];
+    return [_batcher writeMusic:metadata duration:durationSecs withError:error];
 }
 
 - (BOOL)run:(NSError **)error {
     _batcher = [[SoundBatcher alloc] init:_sourceAudio withError:error];
     if (_batcher == nil)
         return NO;
-    _file = [[BufferedTextFile alloc] init:_sourceMap withError:error];
+    _file = [[BufferedTextFile alloc] init:_sourceMap bufferSize:8192 withError:error];
     if (_file == nil)
         return NO;
     NSString *line;

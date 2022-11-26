@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SoundBatch : NSObject
 
-- (instancetype)init:(NSString *)sourceAudio withSourceMap:(NSString *)sourceMap;
+- (instancetype)init:(NSString *)sourceAudio withSourceMap:(NSString *)sourceMap withAlbum:(NSString *)album;
 
 - (BOOL)run:(NSError **)error;
 
