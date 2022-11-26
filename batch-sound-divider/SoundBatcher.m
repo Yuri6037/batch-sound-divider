@@ -45,13 +45,15 @@
     if (framesRead <= 0)
         return NO;
     NSString *fileName = [[[metadata.title stringByAppendingString:@" - "]
-                           stringByAppendingString:metadata.composer] stringByAppendingString:@".m4a"];
+                           stringByAppendingString:metadata.author] stringByAppendingString:@".m4a"];
+    fileName = [fileName stringByReplacingOccurrencesOfString:@"/" withString:@":"];
+    NSLog(@"Writing %@...", fileName);
     AudioFile *outFile = [[AudioFile alloc] init:fileName from:_inFile withError:error];
     if (outFile == nil)
         return NO;
     if (![outFile setMetadata:metadata withError:error])
         return NO;
-    if (![outFile writeFrames:frameCount into:buffer withError:error])
+    if (![outFile writeFrames:framesRead into:buffer withError:error])
         return NO;
     if (![outFile close:error])
         return NO;
