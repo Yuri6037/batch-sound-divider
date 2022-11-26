@@ -117,7 +117,7 @@
     desc.mBytesPerPacket = 2; // must have a value or won't write apparently
     desc.mFramesPerPacket = 0;
     desc.mBytesPerFrame = 0;
-    desc.mChannelsPerFrame = 1;
+    desc.mChannelsPerFrame = file->_decodeDescription.mChannelsPerFrame;
     desc.mBitsPerChannel = 0;
     desc.mReserved = 0;
     OSStatus status = ExtAudioFileCreateWithURL((__bridge CFURLRef)url, kAudioFileM4AType,
