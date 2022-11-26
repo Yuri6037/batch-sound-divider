@@ -6,9 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SoundBatcher.h"
+#import "SoundBatch.h"
 
-BOOL testDivide(NSError **error) {
+/*BOOL testDivide(NSError **error) {
     SoundBatcher *batcher = [[SoundBatcher alloc] init:@"/Users/yuri/Downloads/50 Most Beautiful Classical Music Pieces.m4a" withError:error];
     if (batcher == nil)
         return NO;
@@ -18,16 +18,34 @@ BOOL testDivide(NSError **error) {
     metadata.composer = @"test";
     metadata.album = @"Classical Music";
     return [batcher writeMusic:metadata duration:100 withError:error];
+}*/
+
+SoundBatch *parseArguments(int argc, const char *argv[]) {
+    NSString *sourceAudio = nil;
+    NSString *sourceMap = nil;
+    for (int i = 0; i + 1 != argc; ++i) {
+        if (strcmp(argv[i], "-i") == 0)
+            sourceAudio = [NSString stringWithCString:argv[i + 1] encoding:NSUTF8StringEncoding];
+        else if (strcmp(argv[i], "-s") == 0)
+            sourceMap = [NSString stringWithCString:argv[i + 1] encoding:NSUTF8StringEncoding];
+    }
+    if (sourceAudio == nil || sourceMap == nil) {
+        fprintf(stderr, "No source audio and/or no source map selected, aborting");
+        return nil;
+    }
+    return [[SoundBatch alloc] init:sourceAudio withSourceMap:sourceMap];
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     @autoreleasepool {
         NSError *error;
-        if (!testDivide(&error)) {
-            NSLog(@"An error has occured %@", [error description]);
+        SoundBatch *batch = parseArguments(argc, argv);
+        if (batch == nil)
+            return 1;
+        if (![batch run:&error]) {
+            NSLog(@"An error has occured while running sound batch: %@", [error description]);
+            return 1;
         }
-        // insert code here...
-        NSLog(@"Hello, World!");
     }
     return 0;
 }

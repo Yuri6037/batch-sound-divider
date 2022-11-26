@@ -12,7 +12,27 @@
 		DA60F688292AC7610017D656 /* FrameBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F687292AC7610017D656 /* FrameBuffer.m */; };
 		DA60F68B292C0E1D0017D656 /* SoundBatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F68A292C0E1D0017D656 /* SoundBatcher.m */; };
 		DA60F68E292D60330017D656 /* AudioFileMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = DA60F68D292D60330017D656 /* AudioFileMetadata.m */; };
+		DACD6FCC29313E3A00CD567C /* TextTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DACD6FC829313E2400CD567C /* TextTools.framework */; };
+		DACD6FCD29313E3A00CD567C /* TextTools.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DACD6FC829313E2400CD567C /* TextTools.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DACD6FD22931419600CD567C /* SoundBatch.m in Sources */ = {isa = PBXBuildFile; fileRef = DACD6FD12931419600CD567C /* SoundBatch.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DACD6FC729313E2400CD567C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DACD6FBA29313B8D00CD567C /* TextTools.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA60F699293003DC0017D656;
+			remoteInfo = TextTools;
+		};
+		DACD6FC929313E2400CD567C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DACD6FBA29313B8D00CD567C /* TextTools.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA60F6A3293003DC0017D656;
+			remoteInfo = TextToolsTests;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		DA60F677292ABA890017D656 /* CopyFiles */ = {
@@ -23,6 +43,17 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		DACD6FCE29313E3A00CD567C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DACD6FCD29313E3A00CD567C /* TextTools.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -37,6 +68,9 @@
 		DA60F68A292C0E1D0017D656 /* SoundBatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundBatcher.m; sourceTree = "<group>"; };
 		DA60F68C292D60330017D656 /* AudioFileMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileMetadata.h; sourceTree = "<group>"; };
 		DA60F68D292D60330017D656 /* AudioFileMetadata.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileMetadata.m; sourceTree = "<group>"; };
+		DACD6FBA29313B8D00CD567C /* TextTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TextTools.xcodeproj; path = ../TextTools/TextTools.xcodeproj; sourceTree = SOURCE_ROOT; };
+		DACD6FD02931419600CD567C /* SoundBatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundBatch.h; sourceTree = "<group>"; };
+		DACD6FD12931419600CD567C /* SoundBatch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SoundBatch.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DACD6FCC29313E3A00CD567C /* TextTools.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,8 +88,10 @@
 		DA60F670292ABA890017D656 = {
 			isa = PBXGroup;
 			children = (
+				DACD6FBA29313B8D00CD567C /* TextTools.xcodeproj */,
 				DA60F67B292ABA890017D656 /* batch-sound-divider */,
 				DA60F67A292ABA890017D656 /* Products */,
+				DACD6FCB29313E3A00CD567C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,8 +115,26 @@
 				DA60F686292AC7610017D656 /* FrameBuffer.h */,
 				DA60F687292AC7610017D656 /* FrameBuffer.m */,
 				DA60F684292AC13D0017D656 /* AudioFile.m */,
+				DACD6FD02931419600CD567C /* SoundBatch.h */,
+				DACD6FD12931419600CD567C /* SoundBatch.m */,
 			);
 			path = "batch-sound-divider";
+			sourceTree = "<group>";
+		};
+		DACD6FC329313E2400CD567C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DACD6FC829313E2400CD567C /* TextTools.framework */,
+				DACD6FCA29313E2400CD567C /* TextToolsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DACD6FCB29313E3A00CD567C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,6 +147,7 @@
 				DA60F675292ABA890017D656 /* Sources */,
 				DA60F676292ABA890017D656 /* Frameworks */,
 				DA60F677292ABA890017D656 /* CopyFiles */,
+				DACD6FCE29313E3A00CD567C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -127,12 +183,35 @@
 			mainGroup = DA60F670292ABA890017D656;
 			productRefGroup = DA60F67A292ABA890017D656 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = DACD6FC329313E2400CD567C /* Products */;
+					ProjectRef = DACD6FBA29313B8D00CD567C /* TextTools.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				DA60F678292ABA890017D656 /* batch-sound-divider */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		DACD6FC829313E2400CD567C /* TextTools.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TextTools.framework;
+			remoteRef = DACD6FC729313E2400CD567C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DACD6FCA29313E2400CD567C /* TextToolsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TextToolsTests.xctest;
+			remoteRef = DACD6FC929313E2400CD567C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DA60F675292ABA890017D656 /* Sources */ = {
@@ -143,6 +222,7 @@
 				DA60F688292AC7610017D656 /* FrameBuffer.m in Sources */,
 				DA60F67D292ABA890017D656 /* main.m in Sources */,
 				DA60F68B292C0E1D0017D656 /* SoundBatcher.m in Sources */,
+				DACD6FD22931419600CD567C /* SoundBatch.m in Sources */,
 				DA60F68E292D60330017D656 /* AudioFileMetadata.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
