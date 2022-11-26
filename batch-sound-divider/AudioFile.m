@@ -114,7 +114,7 @@
     desc.mSampleRate = 44100;
     desc.mFormatID = kAudioFormatMPEG4AAC;
     desc.mFormatFlags = 0;
-    desc.mBytesPerPacket = 2; // must have a value or won't write apparently
+    desc.mBytesPerPacket = 0;
     desc.mFramesPerPacket = 0;
     desc.mBytesPerFrame = 0;
     desc.mChannelsPerFrame = file->_decodeDescription.mChannelsPerFrame;
